@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @job.user_id %>
+</p>
+
+<p>
+  <strong>Enterprise:</strong>
+  <%= @job.enterprise_id %>
+</p>
+
+<p>
+  <strong>Role:</strong>
+  <%= @job.role %>
+</p>
+
+<p>
+  <strong>Begin:</strong>
+  <%= @job.begin.strftime("%m/%Y") %>
+</p>
+
+<p>
+  <strong>End:</strong>
+  <%= @job.end.strftime("%m/%Y") %>
+</p>
+
+<%= link_to 'Edit', edit_job_path(@job) %> |
+<%= link_to 'Back', jobs_path %> |
+<%= link_to 'Edit profile', edit_person_path(current_user)%>

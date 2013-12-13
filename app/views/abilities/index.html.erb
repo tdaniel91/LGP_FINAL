@@ -1,0 +1,33 @@
+<h1>Lista de capacidades</h1>
+
+<% if (@abilities.map(&:user_id).include?(current_user.id)) %>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @abilities.each do |ability| %>
+          <% if(ability.user_id == current_user.id) %>
+              <tr>
+                <td><%= ability.name %></td>
+                <td><%= link_to 'Edit', edit_ability_path(ability) %></td>
+                <td><%= link_to 'Destroy', ability, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <%else%>
+    De momento ainda nao tem competencias...
+    <% end %>
+
+<br>
+
+<%= link_to 'Nova capacidade', new_ability_path%> |
+<%= link_to 'Edit profile', edit_person_path(current_user)%>

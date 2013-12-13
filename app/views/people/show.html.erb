@@ -1,0 +1,141 @@
+<p id="notice"><%= notice %></p>
+
+<div id="topUser" class="articleBody" >
+
+  <%= image_tag @person.avatar.url, :class =>"imgUser", :alt => "user img"%>
+  <% if current_user==@user %>
+      <%= link_to "Editar Perfil", edit_person_path(current_user), :class => 'vermais' %>
+  <% else %>
+      <% if (@user_contacts_accepted.map(&:id).include?(current_user.id)) %>
+          <%= link_to "Remover contacto", contacts_path,data: { confirm: 'Are you sure?' }%> <%# TODO linkar para o delete %> <br>
+      <% else %>
+          <%= link_to "Adicionar contacto", new_contact_path( :user2_id => @user.id)%>
+      <% end %>
+  <% end %>
+  <h1 id="articleTitle"><%=@person.name %></h1> <%# TODO meter primeiro nome%>
+  <p id="userFrase"><%=@person.quote %> </p>
+  <%if @jobs.size==0 %>
+      <p></p>
+  <% else %>
+      <p class="userCargo"><b><%= @jobs.last.role %></b></p>
+  <% end %>
+</div>
+
+<div id="pessoal" class="articleBody" >
+  <h2>Pessoal</h2>
+  <h3>Nome completo</h3>
+  <p id="userNomeCompleto"><%=@person.name  %></p>
+  <h3>Data de Nascimento</h3>
+  <p id="userDataNascimento"><%=@person.birthday_date %></p>
+  <h3>Cidade</h3>
+  <p id="userLocalidade"><%=@person.city  %></p>
+  <h3>Email</h3>
+  <p id="userEmail"><%=@user.email  %></p>
+  <h3>Telefone</h3>
+  <p id="userTelefone"><%=@person.phone  %></p>
+  <hr>
+</div>
+
+<% if @privacy!=3%>
+    <div id="cv" class="articleBody">
+      <h2>Formação</h2>
+      <h3>Curso(s)</h3>
+      <%if @courses.size==0 %>
+          <p>De momento não tem nenhum curso no seu perfil! Adicione ao  <%= link_to "perfil", edit_person_path(@person) %>!</p>
+      <% else %>
+          <ul>
+            <% @courses.each do |c| %>
+                <li><b> <%= c.name %> </b> - <%= c.univ %> - <%= c.year.strftime("%Y") %> </li>
+            <% end %>
+          </ul>
+      <% end %>
+      <h3>Competencias:</h3>
+      <%if @abilitys.size==0 %>
+          <p>De momento não tem nenhuma competencia no seu perfil! Adicione ao  <%= link_to "perfil", edit_person_path(@person) %>!</p>
+      <% else %>
+          <ul>
+          <% @abilitys.each do |a| %>
+              <li> <%= a.name %> </li>
+          <% end %>
+          </ul>
+      <% end %>
+      <hr>
+    </div>
+    <div id="profissional" class="articleBody">
+      <h2>Profissão</h2>
+      <h3>Empresa:</h3>                                                               <!-- TODO fazer restricoes sobre os empregos-->
+      <%if @jobs.size==0 %>
+          <p>De momento não tem nenhum emprego registado no perfil! Adicione ao  <%= link_to "perfil", edit_person_path(@person) %>!</p>
+      <% else %>
+          <p id="userEmpresa"><%= link_to Enterprise.find(@jobs.last.enterprise_id).name, Enterprise.find(@jobs.last.enterprise_id) %></p>
+          <h3>Cargo</h3>
+          <p id="userCargo"><%= @jobs.last.role %></p>
+
+          <%if @jobs.size>1 %>
+              <h3>Empregos anteriores:</h3>
+              <ul id="userEmpresas">
+                <% @jobs.each do |j| %>
+                    <li><b> <%= link_to Enterprise.find(j.enterprise_id).name, Enterprise.find(j.enterprise_id) %> </b>
+                      - <%= j.role %> - <%= j.begin.strftime("%d/%m/%Y") %> <--> <%= j.end..strftime("%d/%m/%Y") %> </li>
+                <% end %>
+              </ul>
+              <% end %>
+      <% end %>
+      <h3>Páginas que administro</h3>
+      <% if @admin_pages.size==0 %>
+        <p>De momento não é administrador de nenhuma página de empresa. <%= link_to "Crie", new_enterprise_path%> já a sua empresa!</p>
+      <% else %>
+        <% @admin_pages.each do |ap| %>
+          <%= link_to ap.name, ap %>
+        <% end %>
+      <% end %>
+      <ul id="userHobbies">
+      </ul>
+      <hr>
+    </div>
+
+<% end %>
+<% if @privacy!=2 and @privacy!=3%>
+    <div id="contactos" class="articleBody">
+      <h2>Agenda de contactos</h2>                                                    <!-- TODO meter condiçao para condicionar a 8 amigos-->
+      <h3>Contactos</h3>
+      <div id="userContactos">
+        <%if @user_contacts_accepted.size==0 %>
+            <p>De momento não tem nenhum contacto na sua rede! Adicione <%= link_to "contacts", people_path %>!</p>
+        <% else %>
+            <% @user_contacts_accepted.take(4).each do |c| %>
+                <div class="divContacto">
+                  <a href="profile.html?user=">
+                    <%= link_to (image_tag c.avatar.url, :class =>"imgOtherUser", :alt => "user img"), c %>
+                    <p class="nameOtherUser"> <%= link_to c.name, c%></p>
+                  </a>
+                </div>
+            <% end %>
+            <p class="vermais" ><%= link_to "Ver mais", contacts_path %> <br>
+        <% end %>
+
+      </div>
+      <hr >
+      <h3>Colegas</h3>                                                                <!-- TODO nao funciona -->
+      <div id="userColegas">
+        <%if @jobs.size==0%>
+            <p>De momento não tem nenhum emprego! Edite o seu <%= link_to "perfil", edit_person_path(@person) %>!</p>
+        <% else %>
+            <%if Enterprise.find(@jobs.last.enterprise_id).job.size==1 %>
+                <p>A sua empresa actual não tem funcionários</p>
+            <% else %>
+
+                <% @coworkers.each do |c| %>
+                    <div class="divContacto">
+                      <a href="profile.html?user=">
+                        <img class="imgOtherUser" src="">
+                        <p class="nameOtherUser"> <%= link_to Person.find(c.user_id).name, Person.find(c.user_id) %></p>
+                      </a>
+                    </div>
+                <% end %>
+            <% end %>
+        <% end %>
+      </div>
+      <hr >
+    </div>
+<% end %>

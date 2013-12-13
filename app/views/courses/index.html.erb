@@ -1,0 +1,37 @@
+<h1>Lista dos seus cursos</h1>
+
+<% if (@courses.map(&:user_id).include?(current_user.id)) %>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Univ</th>
+          <th>Year</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @courses.each do |course| %>
+          <% if(course.user_id == current_user.id) %>
+              <tr>
+                <td><%= course.name %></td>
+                <td><%= course.univ %></td>
+                <td><%= course.year.year %></td>
+                <td><%= link_to 'Edit', edit_course_path(course) %></td>
+                <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+<%else%>
+    De momento ainda nao tem competencias...
+<% end %>
+
+<br>
+
+<%= link_to 'New Course', new_course_path %> |
+<%= link_to 'Edit profile', edit_person_path(current_user)%>

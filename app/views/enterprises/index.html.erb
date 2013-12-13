@@ -1,0 +1,23 @@
+<h1>Lista de empresas</h1>
+
+<p>Tem um pequeno negocio e gostava de aumentar a sua visibilidade? <%= link_to "Crie já uma página", new_enterprise_path %> personalizavel para a sua empresa!</p>
+<br>
+  <% @enterprises.each do |enterprise| %>
+    <div>
+      <div style="float:left">
+        <%= link_to (image_tag enterprise.attachment.url,  :class =>"imgListEmpresa", :alt => "enterprise img"), enterprise%>
+      </div>
+      <div>
+          <h1><%= link_to enterprise.name, enterprise %></h1>
+          <p class="empresaSlogan"><%= enterprise.slogan %></p>
+          <%= enterprise.foundation.strftime("%d/%m/%Y") %>
+		  <% if (Person.find(current_user.id).id == enterprise.admin_id) %>
+              <br>
+              <%= link_to 'Editar', edit_enterprise_path(enterprise) %>
+              <%= link_to 'Apagar', enterprise, method: :delete, data: { confirm: 'Tem a certeza?' } %>
+		  <% end %>
+      </div>
+    </div>
+  <% end %>
+
+

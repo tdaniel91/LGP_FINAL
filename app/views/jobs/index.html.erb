@@ -1,0 +1,38 @@
+<h1>Lista de empregos</h1>
+
+<% if (@jobs.map(&:user_id).include?(current_user.id)) %>
+    <table>
+      <thead>
+        <tr>
+          <th>Enterprise</th>
+          <th>Role</th>
+          <th>Begin</th>
+          <th>End</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @jobs.each do |job| %>
+          <% if(job.user_id == current_user.id) %>
+              <tr>
+                <td><%= Enterprise.find(job.enterprise_id).name %></td>
+                <td><%= job.role %></td>
+                <td><%= job.begin.strftime("%m/%Y")%></td>
+                <td><%= job.end.strftime("%m/%Y") %></td>
+                <td><%= link_to 'Edit', edit_job_path(job) %></td>
+                <td><%= link_to 'Destroy', job, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+<%else%>
+    De momento ainda nao tem empregos...
+<% end %>
+<br>
+
+<%= link_to 'New Job', new_job_path %> |
+<%= link_to 'Edit profile', edit_person_path(current_user)%>

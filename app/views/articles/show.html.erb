@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+
+<div style="float:left">
+  <%= image_tag @article.attachment.url, class: "imgArticle" %>
+</div>
+
+
+<div>
+  <h1><%= @article.article_title %> </h1>
+  <p><%= @article.article_text %><p>
+
+  <strong>Autor:</strong>
+  <%= link_to Person.find(@article.user_id ).name, Person.find(@article.user_id ) %>
+</div>
+
+<div style="clear: left">
+</div>
+
+<%= link_to 'Edit', edit_article_path(@article) %> |
+<%= link_to 'Back', articles_path %>

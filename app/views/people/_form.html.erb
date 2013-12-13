@@ -1,0 +1,53 @@
+<%= form_for @person, :html => { :multipart => true}  do |f| %>
+  <% if @person.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h2>
+
+      <ul>
+      <% @person.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+    <p>Edite já os seus <%= link_to "empregos", jobs_path %>, <%= link_to "capacidades", abilities_path %> ou <%= link_to "cursos", courses_path %>!  </p>
+    <p>Para editar os seus dados de acesso ou eliminar a conta, aceda <%= link_to "aqui", edit_user_registration_path %>!</p>
+  <div class="field">
+    <%= f.hidden_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :birthday_date %><br>
+    <%= f.datetime_select( :birthday_date , :discard_hour => true, :discard_minute => true, :start_year => Time.now.year-100, :end_year => Time.now.year-16)%>
+  </div>
+  <div class="field">
+    <%= f.label :city %><br>
+    <%= f.text_field :city %>
+  </div>
+  <div class="field">
+    <%= f.label :phone %><br>
+    <%= f.number_field :phone %>
+  </div>
+  <div class="field">
+    <%= f.label :quote %><br>
+    <%= f.text_area :quote %>
+  </div>
+  <div class="field">
+    <%= f.label :privacy %><br>
+    <% privacy_array = [["Fraca", 1],["Media", 2],["Elevada", 3]] %>
+    <%= options_for_select(privacy_array) %> <%= f.select :privacy, options_for_select(privacy_array, @person.privacy)%>
+  </div>
+  <div class="field">
+	<%= f.label :avatar %>
+	<%= f.file_field :avatar %>
+  </div>
+  
+    <%= f.submit %>
+  
+<% end %>
+
